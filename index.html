@@ -7,6 +7,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="./colors.js"></script>
     <script>
+        var checkLoginStatus = function (response) {
+            console.log(response)
+            // statusChangeCallback(response); // Returns the login status.
+            if (response.status === 'connected') {
+                document.querySelector('#authBtn').value = 'Logout'
+            } else {
+                document.querySelector('#authBtn').value = 'Login'
+            }
+        }
         window.fbAsyncInit = function () {
             FB.init({
                 appId: '770869616893370',
@@ -14,17 +23,7 @@
                 xfbml: true, // Parse social plugins on this webpage.
                 version: 'v10.0' // Use this Graph API version for this call.
             });
-
-            var callback = function (response) {
-                console.log(response)
-                // statusChangeCallback(response); // Returns the login status.
-                if (response.status === 'connected') {
-                    document.querySelector('#authBtn').value = 'Logout'
-                } else {
-                    document.querySelector('#authBtn').value = 'Login'
-                }
-            }
-            FB.getLoginStatus(callback);
+            FB.getLoginStatus(checkLoginStatus);
         };
     </script>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
@@ -36,11 +35,13 @@
             // now logout
             FB.login(function(res) {
                 console.log('login => ', res)
+                checkLoginStatus(res)
             })
         } else {
             // now login
             FB.logout(function(res) {
                 console.log('logout => ', res)
+                checkLoginStatus(res)
             })
         }
 
